@@ -3,6 +3,7 @@
 use App\Models\Booking;
 use App\Models\Tour;
 use App\Models\Hotel;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Benchmark;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +12,10 @@ use Tests\TestCase;
 uses(TestCase::class, RefreshDatabase::class);
 
 it('can create a booking', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tour = Tour::factory()->create();
     $hotel = Hotel::factory()->create();
     $bookingData = Booking::factory()->make([
@@ -29,31 +34,47 @@ it('can create a booking', function () {
 });
 
 it('fails to create a booking with invalid data', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->postJson('/api/bookings', []);
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
         ->assertJsonValidationErrors(['tour_id', 'hotel_id', 'customer_name', 'customer_email', 'number_of_people', 'booking_date']);
 });
 
+
 it('can retrieve all bookings', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     Booking::factory()->count(3)->create();
 
     $response = $this->getJson('/api/bookings');
     $response->assertStatus(Response::HTTP_OK)
-        ->assertJsonCount(3);
+        ->assertJsonCount(3, 'data');
 });
 
-it('can retrieve all bookings performing ok', function(){
+it('can retrieve all bookings performing ok', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     Booking::factory()->count(1000)->create();
 
     $benchmark = Benchmark::measure([
-        'normal' => fn () => $this->get('/api/bookings')
+        'normal' => fn() => $this->get('/api/bookings')
     ]);
 
     $this->assertTrue($benchmark['normal'] < 300);
 })->repeat(10);
 
-
 it('can retrieve bookings with filters', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $booking1 = Booking::factory()->create(['booking_date' => now()->subDays(2)]);
     $booking2 = Booking::factory()->create(['booking_date' => now()->subDays(1)]);
     $booking3 = Booking::factory()->create(['booking_date' => now()]);
@@ -66,25 +87,39 @@ it('can retrieve bookings with filters', function () {
 });
 
 it('can retrieve a single booking', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $booking = Booking::factory()->create();
 
     $response = $this->getJson("/api/bookings/{$booking->id}");
     $response->assertStatus(Response::HTTP_OK)
         ->assertJson([
-            'id' => $booking->id,
-            'tour_id' => $booking->tour_id,
-            'hotel_id' => $booking->hotel_id,
-            'customer_name' => $booking->customer_name,
-            'customer_email' => $booking->customer_email,
+            'data' => [
+                'id' => $booking->id,
+                'tour_id' => $booking->tour_id,
+                'hotel_id' => $booking->hotel_id,
+                'customer_name' => $booking->customer_name,
+                'customer_email' => $booking->customer_email,
+            ],
         ]);
 });
 
 it('returns 404 for a non-existent booking', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->getJson('/api/bookings/999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });
 
 it('can update a booking', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $booking = Booking::factory()->create();
     $updatedData = Booking::factory()->make()->toArray();
 
@@ -99,15 +134,25 @@ it('can update a booking', function () {
 });
 
 it('fails to update a booking with invalid data', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $booking = Booking::factory()->create();
 
-    $response = $this->putJson("/api/bookings/{$booking->id}", 
-        ['tour_id' => '', 'hotel_id' => '', 'customer_name' => '', 'customer_email' => '', 'number_of_people' => '', 'booking_date' => '']);
+    $response = $this->putJson(
+        "/api/bookings/{$booking->id}",
+        ['tour_id' => '', 'hotel_id' => '', 'customer_name' => '', 'customer_email' => '', 'number_of_people' => '', 'booking_date' => '']
+    );
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
         ->assertJsonValidationErrors(['tour_id', 'hotel_id', 'customer_name', 'customer_email', 'number_of_people', 'booking_date']);
 });
 
 it('can delete a booking', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $booking = Booking::factory()->create();
 
     $response = $this->deleteJson("/api/bookings/{$booking->id}");
@@ -117,6 +162,10 @@ it('can delete a booking', function () {
 });
 
 it('returns 404 when deleting a non-existent booking', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->deleteJson('/api/bookings/999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });

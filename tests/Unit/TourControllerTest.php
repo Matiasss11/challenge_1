@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Tour;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -8,6 +9,10 @@ use Tests\TestCase;
 uses(TestCase::class, RefreshDatabase::class);
 
 it('can create a tour', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tourData = Tour::factory()->make()->toArray();
 
     $response = $this->postJson('/api/tours', $tourData);
@@ -20,20 +25,32 @@ it('can create a tour', function () {
 });
 
 it('fails to create a tour with invalid data', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->postJson('/api/tours', []);
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
         ->assertJsonValidationErrors(['name', 'description', 'price', 'start_date', 'end_date']);
 });
 
 it('can retrieve all tours', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tours = Tour::factory()->count(3)->create();
 
     $response = $this->getJson('/api/tours');
     $response->assertStatus(Response::HTTP_OK)
-        ->assertJsonCount(3);
+        ->assertJsonCount(3, 'data');
 });
 
 it('can retrieve tours with filters', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tour1 = Tour::factory()->create(['price' => 100, 'start_date' => now()->subDays(2), 'end_date' => now()->subDay()]);
     $tour2 = Tour::factory()->create(['price' => 200, 'start_date' => now()->subDays(1), 'end_date' => now()]);
     $tour3 = Tour::factory()->create(['price' => 300, 'start_date' => now(), 'end_date' => now()->addDay()]);
@@ -46,6 +63,10 @@ it('can retrieve tours with filters', function () {
 });
 
 it('can retrieve a single tour', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tour = Tour::factory()->create();
 
     $response = $this->getJson("/api/tours/{$tour->id}");
@@ -59,11 +80,19 @@ it('can retrieve a single tour', function () {
 });
 
 it('returns 404 for a non-existent tour', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->getJson('/api/tours/999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });
 
 it('can update a tour', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tour = Tour::factory()->create();
     $updatedData = Tour::factory()->make()->toArray();
 
@@ -77,9 +106,14 @@ it('can update a tour', function () {
 });
 
 it('fails to update a tour with invalid data', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tour = Tour::factory()->create();
 
-    $response = $this->putJson("/api/tours/{$tour->id}", 
+    $response = $this->putJson(
+        "/api/tours/{$tour->id}",
         ['name' => '', 'description' => '', 'price' => '', 'start_date' => '', 'end_date' => '']
     );
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
@@ -87,6 +121,10 @@ it('fails to update a tour with invalid data', function () {
 });
 
 it('can delete a tour', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $tour = Tour::factory()->create();
 
     $response = $this->deleteJson("/api/tours/{$tour->id}");
@@ -96,6 +134,10 @@ it('can delete a tour', function () {
 });
 
 it('returns 404 when deleting a non-existent tour', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->deleteJson('/api/tours/999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });

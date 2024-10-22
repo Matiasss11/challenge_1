@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Hotel;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -8,6 +9,10 @@ use Tests\TestCase;
 uses(TestCase::class, RefreshDatabase::class);
 
 it('can create a hotel', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotelData = Hotel::factory()->make()->toArray();
 
     $response = $this->postJson('/api/hotels', $hotelData);
@@ -21,20 +26,32 @@ it('can create a hotel', function () {
 });
 
 it('fails to create a hotel with invalid data', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->postJson('/api/hotels', []);
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
         ->assertJsonValidationErrors(['name', 'description', 'address', 'rating', 'price_per_night']);
 });
 
 it('can retrieve all hotels', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotels = Hotel::factory()->count(3)->create();
 
     $response = $this->getJson('/api/hotels');
     $response->assertStatus(Response::HTTP_OK)
-        ->assertJsonCount(3);
+        ->assertJsonCount(3, 'data');
 });
 
 it('can retrieve hotels with filters', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotel1 = Hotel::factory()->create(['rating' => 2, 'price_per_night' => 100]);
     $hotel2 = Hotel::factory()->create(['rating' => 4, 'price_per_night' => 200]);
     $hotel3 = Hotel::factory()->create(['rating' => 5, 'price_per_night' => 300]);
@@ -47,6 +64,10 @@ it('can retrieve hotels with filters', function () {
 });
 
 it('can retrieve a single hotel', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotel = Hotel::factory()->create();
 
     $response = $this->getJson("/api/hotels/{$hotel->id}");
@@ -61,11 +82,19 @@ it('can retrieve a single hotel', function () {
 });
 
 it('returns 404 for a non-existent hotel', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->getJson('/api/hotels/999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });
 
 it('can update a hotel', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotel = Hotel::factory()->create();
     $updatedData = Hotel::factory()->make()->toArray();
 
@@ -80,9 +109,14 @@ it('can update a hotel', function () {
 });
 
 it('fails to update a hotel with invalid data', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotel = Hotel::factory()->create();
 
-    $response = $this->putJson("/api/hotels/{$hotel->id}", 
+    $response = $this->putJson(
+        "/api/hotels/{$hotel->id}",
         ['name' => '', 'description' => '', 'address' => '', 'rating' => '', 'price_per_night' => '']
     );
     $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
@@ -90,6 +124,10 @@ it('fails to update a hotel with invalid data', function () {
 });
 
 it('can delete a hotel', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $hotel = Hotel::factory()->create();
 
     $response = $this->deleteJson("/api/hotels/{$hotel->id}");
@@ -99,6 +137,10 @@ it('can delete a hotel', function () {
 });
 
 it('returns 404 when deleting a non-existent hotel', function () {
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
     $response = $this->deleteJson('/api/hotels/999');
     $response->assertStatus(Response::HTTP_NOT_FOUND);
 });
