@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use App\Services\HotelService;
-use App\Http\Requests\HotelRequest;
+use App\Http\Requests\StoreHotelRequest;
+use App\Http\Requests\UpdateHotelRequest;
 
 class HotelController extends Controller
 {
@@ -24,7 +25,7 @@ class HotelController extends Controller
         return response()->json($hotels, 200);
     }
 
-    public function store(HotelRequest $request)
+    public function store(StoreHotelRequest $request)
     {
         $validatedData = $request->validated();
         $hotel = $this->hotelService->createHotel($validatedData);
@@ -37,7 +38,7 @@ class HotelController extends Controller
         return response()->json($hotelData, 200);
     }
 
-    public function update(HotelRequest $request, Hotel $hotel)
+    public function update(UpdateHotelRequest $request, Hotel $hotel)
     {
         $validatedData = $request->validated();
         $updatedHotel = $this->hotelService->updateHotel($hotel, $validatedData);
