@@ -19,7 +19,7 @@ class HotelController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $hotels = $this->hotelService->getHotels($request->all(), $perPage);
+        $hotels = $this->hotelService->getHotels($request, $perPage);
 
         return response()->json($hotels, 200);
     }

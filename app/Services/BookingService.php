@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\BookingStatusEnum;
 use App\Mail\BookingCreatedMail;
 use App\Models\Booking;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Mail;
 
@@ -35,29 +36,29 @@ class BookingService
     }
 
     // Método para obtener reservas con filtros opcionales
-    public function getBookings(array $filters, int $perPage = 10): LengthAwarePaginator
+    public function getBookings(Request $request, int $perPage = 10): LengthAwarePaginator
     {
         $query = Booking::with(['tour', 'hotel']);
 
-        if (!empty($filters['start_date']) || !empty($filters['end_date'])) {
-            $query->dateRange($filters['start_date'] ?? null, $filters['end_date'] ?? null);
+        if ($request->has('start_date') || $request->has('end_date')) {
+            $query->dateRange($request->input('start_date') ?? null, $request->input('end_date') ?? null);
         }
 
-        if (!empty($filters['tour_name'])) {
-            $query->byTourName($filters['tour_name']);
+        if ($request->has('tour_name')) {
+            $query->byTourName($request->input('tour_name'));
         }
 
-        if (!empty($filters['hotel_name'])) {
-            $query->byHotelName($filters['hotel_name']);
+        if ($request->has('hotel_name')) {
+            $query->byHotelName($request->input('hotel_name'));
         }
 
-        if (!empty($filters['customer_name'])) {
-            $query->byCustomerName($filters['customer_name']);
+        if ($request->has('customer_name')) {
+            $query->byCustomerName($request->input('customer_name'));
         }
 
-        if (!empty($filters['sort_by'])) {
-            $sortDirection = $filters['sort_direction'] ?? 'asc';
-            $query->orderBy($filters['sort_by'], $sortDirection);
+        if ($request->has('sort_by')) {
+            $sortDirection = $request->input('sort_direction') ?? 'asc';
+            $query->orderBy($request->input('sort_by'), $sortDirection);
         }
 
         return $query->paginate($perPage);

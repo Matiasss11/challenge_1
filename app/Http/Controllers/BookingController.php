@@ -25,7 +25,7 @@ class BookingController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $bookings = $this->bookingService->getBookings($request->all(), $perPage);
+        $bookings = $this->bookingService->getBookings($request, $perPage);
 
         return response()->json($bookings, 200);
     }

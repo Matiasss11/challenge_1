@@ -19,7 +19,7 @@ class TourController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
-        $tours = $this->tourService->getTours($request->all(), $perPage);
+        $tours = $this->tourService->getTours($request, $perPage);
         return response()->json($tours, 200);
     }
 

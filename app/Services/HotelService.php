@@ -3,30 +3,31 @@
 namespace App\Services;
 
 use App\Models\Hotel;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class HotelService
 {
     // Método para obtener hoteles con filtros opcionales
-    public function getHotels(array $filters, int $perPage = 10): LengthAwarePaginator
+    public function getHotels(Request $request, int $perPage = 10): LengthAwarePaginator
     {
         $query = Hotel::query();
 
         // Filtrado por criterios de búsqueda
-        if (isset($filters['min_rating'])) {
-            $query->where('rating', '>=', $filters['min_rating']);
+        if ($request->has('min_rating')) {
+            $query->where('rating', '>=', $request->input('min_rating'));
         }
 
-        if (isset($filters['max_rating'])) {
-            $query->where('rating', '<=', $filters['max_rating']);
+        if ($request->has('max_rating')) {
+            $query->where('rating', '<=', $request->input('max_rating'));
         }
 
-        if (isset($filters['min_price'])) {
-            $query->where('price_per_night', '>=', $filters['min_price']);
+        if ($request->has('min_price')) {
+            $query->where('price_per_night', '>=', $request->input('min_price'));
         }
 
-        if (isset($filters['max_price'])) {
-            $query->where('price_per_night', '<=', $filters['max_price']);
+        if ($request->has('max_price')) {
+            $query->where('price_per_night', '<=', $request->input('max_price'));
         }
 
         return $query->paginate($perPage);
