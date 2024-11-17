@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +21,7 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'status' => BookingStatus::class,
+        'status' => BookingStatusEnum::class,
     ];
 
     public function tour()

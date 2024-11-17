@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Booking;
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use App\Models\User;
 
 class BookingCancelTest extends TestCase
@@ -19,7 +19,7 @@ class BookingCancelTest extends TestCase
         $this->actingAs($user);
 
         $booking = Booking::factory()->create([
-            'status' => BookingStatus::Pending
+            'status' => BookingStatusEnum::PENDING
         ]);
 
         $response = $this->patchJson(route('bookings.cancel', $booking->id));
@@ -27,7 +27,7 @@ class BookingCancelTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Booking canceled successfully']);
 
-        $this->assertEquals(BookingStatus::Canceled, $booking->fresh()->status);
+        $this->assertEquals(BookingStatusEnum::CANCELED, $booking->fresh()->status);
     }
 
     /** @test */
@@ -37,7 +37,7 @@ class BookingCancelTest extends TestCase
         $this->actingAs($user);
 
         $booking = Booking::factory()->create([
-            'status' => BookingStatus::Canceled
+            'status' => BookingStatusEnum::CANCELED
         ]);
 
         $response = $this->patchJson(route('bookings.cancel', $booking->id));

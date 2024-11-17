@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\BookingStatus;
+use App\Enums\BookingStatusEnum;
 use App\Mail\BookingCreatedMail;
 use App\Models\Booking;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -74,11 +74,11 @@ class BookingService
     {
         $booking = Booking::findOrFail($id);
 
-        if ($booking->status === BookingStatus::Canceled) {
+        if ($booking->status === BookingStatusEnum::CANCELED) {
             return ['message' => 'Booking is already canceled', 'code' => 400];
         }
 
-        $booking->status = BookingStatus::Canceled;
+        $booking->status = BookingStatusEnum::CANCELED;
         $booking->save();
 
         return ['message' => 'Booking canceled successfully', 'code' => 200];
