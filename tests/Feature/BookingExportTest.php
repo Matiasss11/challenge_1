@@ -7,8 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Booking;
 use App\Models\Tour;
 use App\Models\Hotel;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\BookingsExport;
+use Illuminate\Support\Facades\Bus;
+use App\Jobs\ExportBookingsJob;
 use App\Models\User;
 
 class BookingExportTest extends TestCase
@@ -21,7 +21,7 @@ class BookingExportTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user);
 
-        Excel::fake();
+        Bus::fake();
 
         $tour = Tour::factory()->create();
         $hotel = Hotel::factory()->create();
@@ -29,9 +29,9 @@ class BookingExportTest extends TestCase
 
         $response = $this->get('/api/bookings/export');
 
-        $response->assertStatus(200);
+        $response->assertStatus(202);
 
-        Excel::assertDownloaded('bookings.csv', function (BookingsExport $export) {
+        Bus::assertDispatched(ExportBookingsJob::class, function ($job) {
             return true;
         });
     }

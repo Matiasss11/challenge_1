@@ -20,7 +20,7 @@ class ExportBookingsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Export all bookings to a CSV file';
+    protected $description = 'This command triggers the Job that generates the CSV file with the bookins, for testing, debugging or manual execution.';
 
     /**
      * Execute the console command.

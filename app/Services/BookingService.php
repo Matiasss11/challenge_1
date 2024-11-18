@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\BookingStatusEnum;
+use App\Jobs\ExportBookingsJob;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -71,5 +72,10 @@ class BookingService
         $booking->save();
 
         return ['message' => 'Booking canceled successfully', 'code' => 200];
+    }
+
+    public function exportBookings(array $filters): void
+    {
+        ExportBookingsJob::dispatch($filters);
     }
 }

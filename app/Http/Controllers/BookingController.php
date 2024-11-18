@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Services\BookingService;
 use App\Exports\BookingsExport;
 use App\Http\Resources\BookingResource;
+use App\Jobs\ExportBookingsJob;
 use Maatwebsite\Excel\Facades\Excel;
 // use Illuminate\Support\Facades\Mail;
 
@@ -55,8 +56,21 @@ class BookingController extends Controller
 
     public function export(Request $request)
     {
-        $filters = $request->only('start_date', 'end_date', 'tour_name', 'hotel_name', 'customer_name', 'sort_by', 'sort_direction');
-        return Excel::download(new BookingsExport($filters), 'bookings.csv');
+        $filters = $request->only([
+            'start_date',
+            'end_date',
+            'tour_name',
+            'hotel_name',
+            'customer_name',
+            'sort_by',
+            'sort_direction'
+        ]);
+
+        $this->bookingService->exportBookings($filters);
+
+        return response()->json([
+            'message' => 'El proceso de exportación de reservas ha sido iniciado.'
+        ], 202);
     }
 
     public function cancel($id)
