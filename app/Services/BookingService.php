@@ -3,11 +3,9 @@
 namespace App\Services;
 
 use App\Enums\BookingStatusEnum;
-use App\Mail\BookingCreatedMail;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Mail;
 
 class BookingService
 {
@@ -15,9 +13,6 @@ class BookingService
     public function createBooking(array $data)
     {
         $booking = Booking::create($data);
-
-        // Enviar el correo de confirmación
-        Mail::to($data['customer_email'])->send(new BookingCreatedMail($booking));
 
         return $booking;
     }
