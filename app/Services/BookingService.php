@@ -40,24 +40,17 @@ class BookingService
     {
         $query = Booking::with(['tour', 'hotel']);
 
-        if ($request->has('start_date') || $request->has('end_date')) {
-            $query->dateRange($request->input('start_date') ?? null, $request->input('end_date') ?? null);
-        }
+        $query->dateRange(
+            $request->input('start_date'),
+            $request->input('end_date')
+        );
 
-        if ($request->has('tour_name')) {
-            $query->byTourName($request->input('tour_name'));
-        }
-
-        if ($request->has('hotel_name')) {
-            $query->byHotelName($request->input('hotel_name'));
-        }
-
-        if ($request->has('customer_name')) {
-            $query->byCustomerName($request->input('customer_name'));
-        }
+        $query->byTourName($request->input('tour_name'))
+            ->byHotelName($request->input('hotel_name'))
+            ->byCustomerName($request->input('customer_name'));
 
         if ($request->has('sort_by')) {
-            $sortDirection = $request->input('sort_direction') ?? 'asc';
+            $sortDirection = $request->input('sort_direction', 'asc');
             $query->orderBy($request->input('sort_by'), $sortDirection);
         }
 
