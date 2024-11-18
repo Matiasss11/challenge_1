@@ -15,12 +15,12 @@ class HotelResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'address' => $this->address,
-            'rating' => $this->rating,
-            'price_per_night' => $this->price_per_night,
+            'id' => data_get($this, 'id'),
+            'name' => data_get($this, 'name', 'No Name'),
+            'description' => data_get($this, 'description', 'No Description'),
+            'address' => data_get($this, 'address', 'No Address'),
+            'rating' => data_get($this, 'rating', 0),
+            'price_per_night' => data_get($this, 'price_per_night', 0.0),
         ];
     }
 }

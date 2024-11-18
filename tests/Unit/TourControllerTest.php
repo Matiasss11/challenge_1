@@ -72,10 +72,12 @@ it('can retrieve a single tour', function () {
     $response = $this->getJson("/api/tours/{$tour->id}");
     $response->assertStatus(Response::HTTP_OK)
         ->assertJson([
-            'id' => $tour->id,
-            'name' => $tour->name,
-            'description' => $tour->description,
-            'price' => $tour->price,
+            'data' => [
+                'id' => $tour->id,
+                'name' => $tour->name,
+                'description' => $tour->description,
+                'price' => $tour->price,
+            ]
         ]);
 });
 

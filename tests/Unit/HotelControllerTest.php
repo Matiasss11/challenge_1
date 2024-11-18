@@ -73,11 +73,14 @@ it('can retrieve a single hotel', function () {
     $response = $this->getJson("/api/hotels/{$hotel->id}");
     $response->assertStatus(Response::HTTP_OK)
         ->assertJson([
-            'id' => $hotel->id,
-            'name' => $hotel->name,
-            'description' => $hotel->description,
-            'address' => $hotel->address,
-            'rating' => $hotel->rating,
+            'data' => [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+                'description' => $hotel->description,
+                'address' => $hotel->address,
+                'rating' => $hotel->rating,
+                'price_per_night' => $hotel->price_per_night,
+            ]
         ]);
 });
 

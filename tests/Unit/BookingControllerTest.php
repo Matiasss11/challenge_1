@@ -98,8 +98,8 @@ it('can retrieve a single booking', function () {
         ->assertJson([
             'data' => [
                 'id' => $booking->id,
-                'tour_id' => $booking->tour_id,
-                'hotel_id' => $booking->hotel_id,
+                'tour_name' => $booking->tour->name,
+                'hotel_name' => $booking->hotel->name,
                 'customer_name' => $booking->customer_name,
                 'customer_email' => $booking->customer_email,
             ],

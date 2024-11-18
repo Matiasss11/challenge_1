@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\HotelService;
 use App\Http\Requests\StoreHotelRequest;
 use App\Http\Requests\UpdateHotelRequest;
+use App\Http\Resources\HotelResource;
 
 class HotelController extends Controller
 {
@@ -29,13 +30,14 @@ class HotelController extends Controller
     {
         $validatedData = $request->validated();
         $hotel = $this->hotelService->createHotel($validatedData);
-        return response()->json($hotel, 201);
+
+        return response()->json(new HotelResource($hotel), 201);
     }
 
     public function show(Hotel $hotel)
     {
         $hotelData = $this->hotelService->getHotel($hotel);
-        return response()->json($hotelData, 200);
+        return new HotelResource($hotelData);
     }
 
     public function update(UpdateHotelRequest $request, Hotel $hotel)

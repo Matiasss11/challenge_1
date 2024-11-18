@@ -36,6 +36,11 @@ class TourService
         return Tour::create($data);
     }
 
+    public function getTour(Tour $tour): Tour
+    {
+        return $tour;
+    }
+
     public function updateTour(Tour $tour, array $data): Tour
     {
         $tour->update($data);

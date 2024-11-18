@@ -16,10 +16,10 @@ class BookingResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'tour_id' => $this->tour_id,
-            'hotel_id' => $this->hotel_id,
-            'customer_name' => $this->customer_name,
-            'customer_email' => $this->customer_email,
+            'customer_name' => data_get($this, 'customer_name', 'Guest'),
+            'customer_email' => data_get($this, 'customer_email', 'N/A'),
+            'tour_name' => data_get($this, 'tour.name', 'No Tour'),
+            'hotel_name' => data_get($this, 'hotel.name', 'No Hotel'),
         ];
     }
 }
