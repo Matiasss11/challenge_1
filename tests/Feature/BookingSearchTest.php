@@ -30,14 +30,14 @@ class BookingSearchTest extends TestCase
             'customer_name' => 'John Doe',
         ]);
 
-        // Crea otra reserva que no debería coincidir con la búsqueda
+        // Create another booking that should not match the search
         Booking::factory()->create([
             'tour_id' => $tour->id,
             'hotel_id' => $hotel->id,
             'customer_name' => 'Jane Smith',
         ]);
 
-        // Realiza la búsqueda
+        // Search
         $response = $this->getJson('/api/bookings?tour_name=Tour A&hotel_name=Hotel A&customer_name=John Doe');
 
         $response->assertStatus(200)

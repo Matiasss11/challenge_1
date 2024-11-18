@@ -10,7 +10,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class BookingService
 {
-    // Método para crear una nueva reserva
     public function createBooking(array $data)
     {
         $booking = Booking::create($data);
@@ -18,20 +17,17 @@ class BookingService
         return $booking;
     }
 
-    // Método para actualizar una reserva existente
     public function updateBooking(Booking $booking, array $data)
     {
         $booking->update($data);
         return $booking;
     }
 
-    // Método para eliminar una reserva
     public function deleteBooking(Booking $booking)
     {
         $booking->delete();
     }
 
-    // Método para obtener reservas con filtros opcionales
     public function getBookings(Request $request, int $perPage = 10): LengthAwarePaginator
     {
         $query = Booking::with(['tour', 'hotel']);
@@ -53,13 +49,11 @@ class BookingService
         return $query->paginate($perPage);
     }
 
-    // Método para obtener una reserva
     public function getBooking(Booking $booking): Booking
     {
         return $booking;
     }
 
-    // Método para cancelar una reserva
     public function cancelBooking($id)
     {
         $booking = Booking::findOrFail($id);

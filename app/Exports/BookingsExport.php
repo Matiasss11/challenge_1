@@ -49,7 +49,7 @@ class BookingsExport implements FromQuery, WithHeadings
             $bookings->orderBy($this->filters['sort_by'], $sortDirection);
         }
 
-        // Obtener los resultados como una colección
+        // Get the results
         return $bookings->get()->map(function ($booking) {
             return [
                 'id' => $booking->id,

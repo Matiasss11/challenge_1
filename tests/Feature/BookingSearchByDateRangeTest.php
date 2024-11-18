@@ -25,26 +25,26 @@ class BookingSearchByDateRangeTest extends TestCase
         $tour = Tour::factory()->create(['name' => 'Adventure Tour']);
         $hotel = Hotel::factory()->create(['name' => 'Luxury Resort']);
 
-        // Crear reservas con diferentes fechas
+        // Create bookings with different dates
         Booking::factory()->create([
             'tour_id' => $tour->id,
             'hotel_id' => $hotel->id,
             'customer_name' => 'John Doe',
-            'booking_date' => now()->toDateString(), // Fecha de hoy
+            'booking_date' => now()->toDateString(), // Today date
         ]);
 
         Booking::factory()->create([
             'tour_id' => $tour->id,
             'hotel_id' => $hotel->id,
             'customer_name' => 'Jane Smith',
-            'booking_date' => now()->addDays(10)->toDateString(), // Dentro del rango
+            'booking_date' => now()->addDays(10)->toDateString(), // Within range
         ]);
 
         Booking::factory()->create([
             'tour_id' => $tour->id,
             'hotel_id' => $hotel->id,
             'customer_name' => 'Tom Brown',
-            'booking_date' => now()->addDays(20)->toDateString(), // Fuera del rango
+            'booking_date' => now()->addDays(20)->toDateString(), // Out of range
         ]);
 
         $response = $this->getJson('/api/bookings?start_date=' . now()->toDateString() . '&end_date=' . now()->addDays(15)->toDateString());

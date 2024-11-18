@@ -8,12 +8,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class HotelService
 {
-    // Método para obtener hoteles con filtros opcionales
     public function getHotels(Request $request, int $perPage = 10): LengthAwarePaginator
     {
         $query = Hotel::query();
 
-        // Filtrado por criterios de búsqueda
         if ($request->has('min_rating')) {
             $query->where('rating', '>=', $request->input('min_rating'));
         }
@@ -33,26 +31,22 @@ class HotelService
         return $query->paginate($perPage);
     }
 
-    // Método para crear un nuevo hotel
     public function createHotel(array $data): Hotel
     {
         return Hotel::create($data);
     }
 
-    // Método para obtener un hotel específico
     public function getHotel(Hotel $hotel): Hotel
     {
         return $hotel;
     }
 
-    // Método para actualizar un hotel
     public function updateHotel(Hotel $hotel, array $data): Hotel
     {
         $hotel->update($data);
         return $hotel;
     }
 
-    // Método para eliminar un hotel
     public function deleteHotel(Hotel $hotel): void
     {
         $hotel->delete();

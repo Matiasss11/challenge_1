@@ -4,15 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
-// use App\Mail\BookingCreatedMail;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Services\BookingService;
-use App\Exports\BookingsExport;
 use App\Http\Resources\BookingResource;
-use App\Jobs\ExportBookingsJob;
-use Maatwebsite\Excel\Facades\Excel;
-// use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {

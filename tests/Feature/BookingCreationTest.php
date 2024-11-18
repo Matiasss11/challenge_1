@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Booking;
 use App\Mail\BookingCreatedMail;
 use App\Models\User;
 use App\Models\Tour;
