@@ -64,7 +64,7 @@ class BookingController extends Controller
         $this->bookingService->exportBookings($filters);
 
         return response()->json([
-            'message' => 'El proceso de exportación de reservas ha sido iniciado.'
+            'message' => 'The booking export process has been initiated'
         ], 202);
     }
 
